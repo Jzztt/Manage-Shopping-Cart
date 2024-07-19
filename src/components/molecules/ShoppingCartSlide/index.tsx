@@ -11,7 +11,7 @@ const ShoppingCartSlide = () => {
   return (
     <>
       <Dialog open={isOpen} onOpenChange={openCart}>
-        <DialogContent>
+        <DialogContent disableStyle={true}>
           <div className="absolute inset-0 overflow-hidden">
             <div className="fixed inset-y-0 right-0 flex max-w-full pl-10 pointer-events-none">
               <div className="pointer-events-auto w-screen max-w-md transform transition duration-500 ease-in-out data-[closed]:translate-x-full sm:duration-700">
