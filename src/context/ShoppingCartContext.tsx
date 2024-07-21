@@ -45,7 +45,6 @@ const ShoppingCartProvider = ({ children }: IShoppingCartProviderProps) => {
   );
   const openCart = () => setIsOpen(true);
   const closeCart = () => setIsOpen(false);
-  console.log(cartItems);
 
   const getItemQuantity = (id: number) => {
    return cartItems.find((item) => item.product._id === id)?.quantity || 0
@@ -54,19 +53,6 @@ const ShoppingCartProvider = ({ children }: IShoppingCartProviderProps) => {
     userId: string,
     productId: string,
   ) => {
-    // setCartItems((currItems) => {
-    //   if (currItems.find((item) => item._id === product._id) == null) {
-    //     return [...currItems, { ...product, quantity: 1 }];
-    //   } else {
-    //     return currItems.map((item) => {
-    //       if (item._id === product._id) {
-    //         return { ...item, quantity: item.quantity + 1 };
-    //       } else {
-    //         return item;
-    //       }
-    //     });
-    //   }
-    // });
     const increaseCartQuantityResponse = await CartService.increaseCartQuantity(
       userId,
       productId
@@ -78,19 +64,6 @@ const ShoppingCartProvider = ({ children }: IShoppingCartProviderProps) => {
   };
 
   const decreaseCartQuantity = async (orderId: string, productId: string) => {
-    // setCartItems((currItems) => {
-    //   if (currItems.find((item) => item._id === product._id)?.quantity === 1) {
-    //     return currItems.filter((item) => item._id !== product._id);
-    //   } else {
-    //     return currItems.map((item) => {
-    //       if (item._id === product._id) {
-    //         return { ...item, quantity: item.quantity - 1 };
-    //       } else {
-    //         return item;
-    //       }
-    //     });
-    //   }
-    // });
     const decreaseCartQuantityResponse = await CartService.decreaseCartQuantity(
       orderId,
       productId
@@ -109,10 +82,6 @@ const ShoppingCartProvider = ({ children }: IShoppingCartProviderProps) => {
     if (removeFromCartResponse?.data) {
       setCartItems(removeFromCartResponse?.data[0].products);
     }
-
-    // setCartItems((currItems) => {
-    //   return currItems.filter((item) => item._id !== id);
-    // });
   };
 
   useEffect(() => {
