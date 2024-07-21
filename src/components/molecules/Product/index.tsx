@@ -6,34 +6,23 @@ import { useShoppingCart } from "@/context/ShoppingCartContext";
 import { formatCurrency } from "@/ultis/formatCurrency";
 
 export interface IProductProps {
-  id: number;
+  _id: number;
   name: string;
-  slug: string;
-  quantity: number;
   cost: number;
   price: number;
-  color: string;
   image: string;
-  status: string;
   description: string;
 }
 const Product = (props: IProductProps) => {
-  const {
-    id,
-    name,
-    cost,
-    price,
-    image,
-    description,
-  } = props;
+  const { _id, name, cost, price, image, description } = props;
   const {
     getItemQuantity,
     increaseCartQuantity,
     decreaseCartQuantity,
     removeFromCart,
   } = useShoppingCart();
-  const quantityProductInCart = getItemQuantity(id);
-
+  const quantityProductInCart = getItemQuantity(_id);
+  const orderId = "669cd5efc3b258d973f7bf94";
 
   return (
     <Card>
@@ -43,10 +32,14 @@ const Product = (props: IProductProps) => {
         className="w-full h-[300px] rounded-t-sm"
       />
       <CardContent>
-        <h3 className="py-4 font-bold ">{name}</h3>
-        <p>{description}</p>
-        <p className="py-2 font-semibold line-through">{formatCurrency(cost)}</p>
-        <p className="font-semibold">{formatCurrency(price)}</p>
+        <div className="h-[168px]">
+          <h3 className="py-4 font-bold ">{name}</h3>
+          <p className="h-12">{description}</p>
+          <p className="py-2 font-semibold line-through">
+            {formatCurrency(cost)}
+          </p>
+          <p className="font-semibold">{formatCurrency(price)}</p>
+        </div>
       </CardContent>
       <CardFooter className="grid grid-cols-10 gap-2.5 ">
         <Button className="col-span-3">
@@ -56,7 +49,7 @@ const Product = (props: IProductProps) => {
         {quantityProductInCart === 0 ? (
           <>
             <Button
-              onClick={() => increaseCartQuantity(props)}
+              onClick={() => increaseCartQuantity("1", [props])}
               className="flex col-span-7 gap-4"
             >
               <ShoppingCart className="w-4 h-4" />
@@ -65,11 +58,15 @@ const Product = (props: IProductProps) => {
           </>
         ) : (
           <div className="grid items-center justify-center h-10 grid-cols-3 col-span-7 text-sm font-medium rounded-md bg-primary text-primary-foreground hover:bg-primary/90">
-            <button onClick={() => decreaseCartQuantity(props)}>
+            <button
+              onClick={() => decreaseCartQuantity(orderId, _id.toString())}
+            >
               <Minus className="w-full h-10 p-3 border-r-2 border-gray-500 " />
             </button>
-            <span className="flex items-center justify-center ">{quantityProductInCart}</span>
-            <button onClick={() => increaseCartQuantity(props)}>
+            <span className="flex items-center justify-center ">
+              {quantityProductInCart}
+            </span>
+            <button onClick={() => increaseCartQuantity("1", [props])}>
               <Plus className="w-full h-10 p-3 border-l-2 border-gray-500" />
             </button>
           </div>

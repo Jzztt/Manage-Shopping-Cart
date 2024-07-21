@@ -5,6 +5,8 @@ import { useShoppingCart } from "@/context/ShoppingCartContext";
 import { formatCurrency } from "@/ultis/formatCurrency";
 
 const ShoppingCartSlide = () => {
+  const orderId = "669cd5efc3b258d973f7bf94";
+
   const { openCart, isOpen, closeCart, cartItems, removeFromCart, totalCost } =
     useShoppingCart();
 
@@ -41,7 +43,7 @@ const ShoppingCartSlide = () => {
                           className="-my-6 divide-y divide-gray-200"
                         >
                           {cartItems.map((product) => (
-                            <li key={product.id} className="flex py-6">
+                            <li key={product._id} className="flex py-6">
                               <div className="flex-shrink-0 w-24 h-24 overflow-hidden border border-gray-200 rounded-md">
                                 <img
                                   src={product.image}
@@ -69,7 +71,7 @@ const ShoppingCartSlide = () => {
                                   <div className="flex">
                                     <button
                                       type="button"
-                                      onClick={() => removeFromCart(product.id)}
+                                      onClick={() => removeFromCart(orderId, (product._id).toString())}
                                       className="font-medium text-indigo-600 hover:text-indigo-500"
                                     >
                                       Remove

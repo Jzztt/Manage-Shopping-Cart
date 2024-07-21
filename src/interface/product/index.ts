@@ -1,13 +1,14 @@
 import { IResponse } from "../baseTemplate";
 
 export interface IProductDetailInfo {
-    id: number;
+    _id: number;
     name: string;
+    cost: number;
     description: string;
     price: number;
-    Image: string;
+    image: string;
 }
 
 export interface IProductResponse extends IResponse {
-    data?: IProductDetailInfo | null;
+    data: IProductDetailInfo[] | null;
 }
