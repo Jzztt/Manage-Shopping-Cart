@@ -1,4 +1,4 @@
-import { IProductProps } from "@/components/molecules";
+import { ICart } from "@/interface/cart";
 import { CartService } from "@/services/cart";
 import { createContext, useContext, useEffect, useState } from "react";
 interface IShoppingCartProviderProps {
@@ -6,11 +6,11 @@ interface IShoppingCartProviderProps {
 }
 
 interface IShoppingCartContext {
-  cartItems: ICartItem[];
+  cartItems: ICart[];
   openCart: () => void;
   closeCart: () => void;
   getItemQuantity: (item: number) => number;
-  increaseCartQuantity: (userId: string, products: IProductProps[]) => void;
+  increaseCartQuantity: (userId: string, productId: string) => void;
   decreaseCartQuantity: (orderId: string, productId: string) => void;
   removeFromCart: (orderId: string, productId: string) => void;
   cartQuantity: number;
@@ -20,10 +20,10 @@ interface IShoppingCartContext {
 export interface ICartItem {
   _id: number;
   name: string;
+  description: string;
   image: string;
   price: number;
   cost: number;
-  quantity: number;
 }
 
 const ShoppingCartContext = createContext({} as IShoppingCartContext);
@@ -33,24 +33,26 @@ const useShoppingCart = () => {
 
 const ShoppingCartProvider = ({ children }: IShoppingCartProviderProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [cartItems, setCartItems] = useState<ICartItem[]>([]);
+  const [cartItems, setCartItems] = useState<ICart[]>([]);
 
   const cartQuantity = cartItems.reduce(
     (quantity, item) => quantity + item.quantity,
     0
   );
   const totalCost = cartItems.reduce(
-    (total, item) => total + item.price * item.quantity,
+    (total, item) => total + item.product.price * item.quantity,
     0
   );
   const openCart = () => setIsOpen(true);
   const closeCart = () => setIsOpen(false);
+  console.log(cartItems);
+
   const getItemQuantity = (id: number) => {
-    return cartItems.find((item) => item._id === id)?.quantity || 0;
+   return cartItems.find((item) => item.product._id === id)?.quantity || 0
   };
   const increaseCartQuantity = async (
     userId: string,
-    products: IProductProps[]
+    productId: string,
   ) => {
     // setCartItems((currItems) => {
     //   if (currItems.find((item) => item._id === product._id) == null) {
@@ -67,10 +69,11 @@ const ShoppingCartProvider = ({ children }: IShoppingCartProviderProps) => {
     // });
     const increaseCartQuantityResponse = await CartService.increaseCartQuantity(
       userId,
-      products
+      productId
     );
     if (increaseCartQuantityResponse?.data) {
-      setCartItems(increaseCartQuantityResponse?.data.products);
+
+      setCartItems(increaseCartQuantityResponse?.data[0].products);
     }
   };
 
@@ -94,7 +97,8 @@ const ShoppingCartProvider = ({ children }: IShoppingCartProviderProps) => {
     );
 
     if (decreaseCartQuantityResponse?.data) {
-      setCartItems(decreaseCartQuantityResponse?.data.products);
+
+      setCartItems(decreaseCartQuantityResponse?.data[0].products);
     }
   };
   const removeFromCart = async (orderId: string, productId: string) => {
@@ -103,7 +107,7 @@ const ShoppingCartProvider = ({ children }: IShoppingCartProviderProps) => {
       productId
     );
     if (removeFromCartResponse?.data) {
-      setCartItems(removeFromCartResponse?.data.products);
+      setCartItems(removeFromCartResponse?.data[0].products);
     }
 
     // setCartItems((currItems) => {

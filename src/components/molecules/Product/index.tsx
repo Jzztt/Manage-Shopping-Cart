@@ -16,13 +16,12 @@ export interface IProductProps {
 const Product = (props: IProductProps) => {
   const { _id, name, cost, price, image, description } = props;
   const {
-    getItemQuantity,
     increaseCartQuantity,
-    decreaseCartQuantity,
-    removeFromCart,
+    // decreaseCartQuantity,
+    // removeFromCart,
   } = useShoppingCart();
-  const quantityProductInCart = getItemQuantity(_id);
-  const orderId = "669cd5efc3b258d973f7bf94";
+  // const quantityProductInCart = getItemQuantity(_id);
+  // const orderId = "669cef7fc201fa090937ed04";
 
   return (
     <Card>
@@ -46,16 +45,16 @@ const Product = (props: IProductProps) => {
           {" "}
           <Heart className="w-4 h-4" />
         </Button>
-        {quantityProductInCart === 0 ? (
-          <>
+        {/* {quantityProductInCart === 0 ? (
+          <> */}
             <Button
-              onClick={() => increaseCartQuantity("1", [props])}
+              onClick={() => increaseCartQuantity("669cb03364032239f8c2c5c4", _id.toString())}
               className="flex col-span-7 gap-4"
             >
               <ShoppingCart className="w-4 h-4" />
               Add to Cart
             </Button>
-          </>
+          {/* </>
         ) : (
           <div className="grid items-center justify-center h-10 grid-cols-3 col-span-7 text-sm font-medium rounded-md bg-primary text-primary-foreground hover:bg-primary/90">
             <button
@@ -66,11 +65,11 @@ const Product = (props: IProductProps) => {
             <span className="flex items-center justify-center ">
               {quantityProductInCart}
             </span>
-            <button onClick={() => increaseCartQuantity("1", [props])}>
+            <button onClick={() => increaseCartQuantity("669cb03364032239f8c2c5c4", [props])}>
               <Plus className="w-full h-10 p-3 border-l-2 border-gray-500" />
             </button>
           </div>
-        )}
+        )} */}
       </CardFooter>
     </Card>
   );

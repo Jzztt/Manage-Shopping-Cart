@@ -1,11 +1,10 @@
 import { IAddToCartRequest, ICartResponse, IDecreaseCartQuantityResponse, IIncreaseCartQuantityResponse, IRemoveFromCartResponse } from "@/interface/cart";
-import { IProductDetailInfo } from "@/interface/product";
 import { CustomAxios } from "@/ultis/customAxios";
 import { handleAxiosError } from "@/ultis/handleAxiosError";
 
-const increaseCartQuantity = async (userId: string, products: IProductDetailInfo[]) => {
+const increaseCartQuantity = async (userId: string, productId: string) => {
     try {
-        const payload: IAddToCartRequest = { products, userId: '669cb03364032239f8c2c5c4' };
+        const payload: IAddToCartRequest = { productId, userId: '669cb03364032239f8c2c5c4' };
         const { data } = await CustomAxios.post<IIncreaseCartQuantityResponse>("/orders", payload);
         return data;
     } catch (error) {
