@@ -1,10 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { X } from "lucide-react";
 import { useShoppingCart } from "@/context/ShoppingCartContext";
 import { formatCurrency } from "@/ultis/formatCurrency";
+import ShoppingCheckout from "../ShoppingCheckout";
+import { toast } from "react-toastify";
 
 const ShoppingCartSlide = () => {
+  const [isShowDialogCheckout, setIsShowDialogCheckout] = useState(false);
   const orderId = "669cef7fc201fa090937ed04";
 
   const {
@@ -16,7 +19,7 @@ const ShoppingCartSlide = () => {
     decreaseCartQuantity,
     increaseCartQuantity,
     totalCost,
-    cartQuantity,
+    getItemQuantity,
   } = useShoppingCart();
 
   return (
@@ -80,19 +83,7 @@ const ShoppingCartSlide = () => {
                                   </p>
 
                                   <div className="flex">
-                                    {/* <button
-                                      type="button"
-                                      onClick={() =>
-                                        removeFromCart(
-                                          orderId,
-                                          products.product._id.toString()
-                                        )
-                                      }
-                                      className="font-medium text-indigo-600 hover:text-indigo-500"
-                                    >
-                                      Remove
-                                    </button> */}
-                                    <div className="flex items-center">
+                                    <div className="flex items-center mr-2">
                                       <button
                                         onClick={() =>
                                           decreaseCartQuantity(
@@ -111,19 +102,24 @@ const ShoppingCartSlide = () => {
                                         >
                                           <path
                                             stroke="currentColor"
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                            stroke-width="2"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth="2"
                                             d="M1 1h16"
                                           />
                                         </svg>
                                       </button>
                                       <p className="w-10 text-sm font-medium text-center text-gray-900 bg-transparent border-0 shrink-0 focus:outline-none focus:ring-0 dark:text-white">
                                         {" "}
-                                        {cartQuantity}
+                                        {getItemQuantity(products.product._id)}
                                       </p>
                                       <button
-                                      onClick={() => increaseCartQuantity("669cb03364032239f8c2c5c4", products.product._id.toString())}
+                                        onClick={() =>
+                                          increaseCartQuantity(
+                                            "669cb03364032239f8c2c5c4",
+                                            products.product._id.toString()
+                                          )
+                                        }
                                         className="inline-flex items-center justify-center w-5 h-5 bg-gray-100 border border-gray-300 rounded-md shrink-0 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700"
                                       >
                                         <svg
@@ -135,14 +131,26 @@ const ShoppingCartSlide = () => {
                                         >
                                           <path
                                             stroke="currentColor"
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                            stroke-width="2"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth="2"
                                             d="M9 1v16M1 9h16"
                                           />
                                         </svg>
                                       </button>
                                     </div>
+                                    <button
+                                      type="button"
+                                      onClick={() =>
+                                        removeFromCart(
+                                          orderId,
+                                          products.product._id.toString()
+                                        )
+                                      }
+                                      className="font-medium text-indigo-600 hover:text-indigo-500"
+                                    >
+                                      <X />
+                                    </button>
                                   </div>
                                 </div>
                               </div>
@@ -163,6 +171,15 @@ const ShoppingCartSlide = () => {
                     </p>
                     <div className="mt-6">
                       <a
+                        onClick={() => {
+                          if(!totalCost){
+                            toast.warn("Cart is empty");
+                            return;
+
+                          }
+                          closeCart();
+                          setIsShowDialogCheckout(true);
+                        }}
                         href="#"
                         className="flex items-center justify-center px-6 py-3 text-base font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700"
                       >
@@ -189,6 +206,10 @@ const ShoppingCartSlide = () => {
           </div>
         </DialogContent>
       </Dialog>
+      <ShoppingCheckout
+        isShowDialogCheckout={isShowDialogCheckout}
+        handleShowDialogCheckout={setIsShowDialogCheckout}
+      />
     </>
   );
 };

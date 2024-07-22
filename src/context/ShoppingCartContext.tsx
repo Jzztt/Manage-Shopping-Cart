@@ -1,6 +1,7 @@
 import { ICart } from "@/interface/cart";
 import { CartService } from "@/services/cart";
 import { createContext, useContext, useEffect, useState } from "react";
+import { toast } from "react-toastify";
 interface IShoppingCartProviderProps {
   children: React.ReactNode;
 }
@@ -47,20 +48,20 @@ const ShoppingCartProvider = ({ children }: IShoppingCartProviderProps) => {
   const closeCart = () => setIsOpen(false);
 
   const getItemQuantity = (id: number) => {
-   return cartItems.find((item) => item.product._id === id)?.quantity || 0
+    return cartItems.find((item) => item.product._id === id)?.quantity || 0;
   };
-  const increaseCartQuantity = async (
-    userId: string,
-    productId: string,
-  ) => {
+  const increaseCartQuantity = async (userId: string, productId: string) => {
     const increaseCartQuantityResponse = await CartService.increaseCartQuantity(
       userId,
       productId
     );
     if (increaseCartQuantityResponse?.data) {
+      toast.success("Product increased successfully");
 
       setCartItems(increaseCartQuantityResponse?.data[0].products);
+      return;
     }
+    toast.error("Product increased failed");
   };
 
   const decreaseCartQuantity = async (orderId: string, productId: string) => {
@@ -70,9 +71,12 @@ const ShoppingCartProvider = ({ children }: IShoppingCartProviderProps) => {
     );
 
     if (decreaseCartQuantityResponse?.data) {
+      toast.success("Product decreased successfully");
 
       setCartItems(decreaseCartQuantityResponse?.data[0].products);
+      return;
     }
+    toast.error("Product decreased failed");
   };
   const removeFromCart = async (orderId: string, productId: string) => {
     const removeFromCartResponse = await CartService.removeFromCart(
@@ -80,8 +84,11 @@ const ShoppingCartProvider = ({ children }: IShoppingCartProviderProps) => {
       productId
     );
     if (removeFromCartResponse?.data) {
+      toast.success("Product removed successfully");
       setCartItems(removeFromCartResponse?.data[0].products);
+      return;
     }
+    toast.error("Product not found");
   };
 
   useEffect(() => {
@@ -90,6 +97,7 @@ const ShoppingCartProvider = ({ children }: IShoppingCartProviderProps) => {
 
       if (response?.data && response?.data.length > 0) {
         setCartItems(response?.data[0].products);
+        return;
       }
     };
     fetchCart();

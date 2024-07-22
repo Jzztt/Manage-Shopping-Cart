@@ -1,3 +1,4 @@
+import { TebToastContainer } from "@/components/atoms";
 import Product from "@/components/molecules/Product";
 import { IProductDetailInfo } from "@/interface/product";
 import { ProductService } from "@/services";
@@ -22,8 +23,9 @@ const ListProduct = () => {
         </div>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {products.map((product) => (
-            <Product key={product.id} {...product} />
+            <Product key={product._id} {...product} />
           ))}
+          <TebToastContainer />
         </div>
       </div>
     </>
